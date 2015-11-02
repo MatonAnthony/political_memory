@@ -37,8 +37,17 @@ TEMPLATE_DEBUG = DEBUG
 if SECRET_KEY == 'notsecret' and not DEBUG:
     raise Exception('Please export DJANGO_SECRET_KEY or DEBUG')
 
+from socket import gethostname
+ALLOWED_HOSTS = [
+    gethostname(),
+]
+
+DNS = os.environ.get('OPENSHIFT_APP_DNS', None),
+if DNS:
+    ALLOWED_HOSTS += DNS
+
 if 'DJANGO_ALLOWED_HOSTS' in os.environ:
-    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(',')
+    ALLOWED_HOSTS += os.environ.get('DJANGO_ALLOWED_HOSTS').split(',')
 
 REDIS_DB = os.environ.get('REDIS_DB', 1)
 ORGANIZATION_NAME = os.environ.get('ORGANIZATION', 'Memopol Demo')
@@ -110,6 +119,14 @@ DATABASES = {
 if 'OPENSHIFT_DATA_DIR' in os.environ:
     DATABASES['default']['NAME'] = os.path.join(DATA_DIR, 'db.sqlite')
 
+if 'OPENSHIFT_POSTGRESQL_DB_HOST' in os.environ:
+    DATABASES['default']['NAME'] = os.environ['OPENSHIFT_APP_NAME']
+    DATABASES['default']['USER'] = os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME']
+    DATABASES['default']['PASSWORD'] = os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD']
+    DATABASES['default']['HOST'] = os.environ['OPENSHIFT_POSTGRESQL_DB_HOST']
+    DATABASES['default']['PORT'] = os.environ['OPENSHIFT_POSTGRESQL_DB_PORT']
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -126,6 +143,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 STATIC_URL = '/static/'
 COMPRESS_ROOT = 'static/'
@@ -212,6 +231,10 @@ LOGGING = {
         },
     },
     'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG'
+        },
         'memopol': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG'
@@ -229,10 +252,18 @@ LOGGING = {
 
 CONSTANCE_BACKEND = 'constance.backends.redisd.RedisBackend'
 CONSTANCE_REDIS_CONNECTION = {
-    'host': 'localhost',
-    'port': 6379,
-    'db': 0,
+
+    'host': os.environ.get('OPENSHIFT_REDIS_HOST', 'localhost'),
+    'port': os.environ.get('OPENSHIFT_REDIS_PORT', 6379),
+    'password': os.environ.get('REDIS_PASSWORD', ''),
+    'db': 1,
 }
+CONSTANCE_REDIS_CONNECTION = 'redis://:%s@%s:%s/%s' % (
+    os.environ.get('REDIS_PASSWORD', ''),
+    os.environ.get('OPENSHIFT_REDIS_HOST', 'localhost'),
+    os.environ.get('OPENSHIFT_REDIS_PORT', 6379),
+    0,
+)
 
 CONSTANCE_CONFIG = {
     'USE_COUNTRY': (True, 'Use country for representative'),
