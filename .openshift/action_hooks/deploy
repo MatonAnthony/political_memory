@@ -12,15 +12,12 @@ source ${OPENSHIFT_HOMEDIR}app-root/runtime/dependencies/python/virtenv/bin/acti
 cat ${OPENSHIFT_REPO_DIR}requirements.txt
 
 pip install -r ${OPENSHIFT_REPO_DIR}requirements.txt
-find $OPENSHIFT_REPO_DIR -name manage.py
 
 # We don't have sentry yet
 # python ${OPENSHIFT_REPO_DIR}manage.py raven test
 
 python ${OPENSHIFT_REPO_DIR}manage.py migrate --noinput
 
-if [ ! -d $OPENSHIFT_DATA_DIR/media ]; then
-    mkdir $OPENSHIFT_DATA_DIR/media
-fi
-
-ln -sf $OPENSHIFT_DATA_DIR/media $OPENSHIFT_REPO_DIR/wsgi/static/media
+mkdir -p ${OPENSHIFT_DATA_DIR}media
+mkdir -p ${OPENSHIFT_REPO_DIR}wsgi/static/media
+ln -sf ${OPENSHIFT_DATA_DIR}media ${OPENSHIFT_REPO_DIR}wsgi/static/media
