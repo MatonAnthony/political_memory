@@ -76,7 +76,7 @@ def parltrack_representative_post_save(sender, representative, data, **kwargs):
                 representative_ptr=representative.pk)
 
     try:
-        country = sorted(data['Constituencies'],
+        country = sorted(data.get('Constituencies', []),
                 key=lambda c: c.get('end') if c is not None else 1
                 )[-1]['country']
     except IndexError:
