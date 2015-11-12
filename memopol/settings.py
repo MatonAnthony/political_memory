@@ -119,6 +119,14 @@ DATABASES = {
 if 'OPENSHIFT_DATA_DIR' in os.environ:
     DATABASES['default']['NAME'] = os.path.join(DATA_DIR, 'db.sqlite')
 
+if 'OPENSHIFT_POSTGRESQL_DB_HOST' in os.environ:
+    DATABASES['default']['NAME'] = os.environ['OPENSHIFT_APP_NAME']
+    DATABASES['default']['USER'] = os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME']
+    DATABASES['default']['PASSWORD'] = os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD']
+    DATABASES['default']['HOST'] = os.environ['OPENSHIFT_POSTGRESQL_DB_HOST']
+    DATABASES['default']['PORT'] = os.environ['OPENSHIFT_POSTGRESQL_DB_PORT']
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
