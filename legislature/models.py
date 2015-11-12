@@ -70,10 +70,15 @@ def parltrack_representative_post_save(sender, representative, data, **kwargs):
     update = False
     try:
         memopol_representative = MemopolRepresentative.objects.get(
-                representative_ptr=representative.pk)
+                representative_ptr=representative)
     except MemopolRepresentative.DoesNotExist:
         memopol_representative = MemopolRepresentative(
-                representative_ptr=representative.pk)
+                representative_ptr=representative)
+
+        # Please forgive the horror your are about to witness, but this is
+        # really necessary. Django wants to update the parent model when we
+        # save a child model.
+        memopol_representative.__dict__.update(representative.__dict__)
 
     try:
         country = sorted(data.get('Constituencies', []),
@@ -94,7 +99,8 @@ def parltrack_representative_post_save(sender, representative, data, **kwargs):
     if sender.mep_cache['groups']:
         main_mandate = sorted(sender.mep_cache['groups'],
                 key=lambda m: m.end_date)[-1]
-        if memopol_representative.main_mandate != main_mandate:
+
+        if  memopol_representative.main_mandate_id != main_mandate.pk:
             memopol_representative.main_mandate_id = main_mandate.pk
             update = True
 
