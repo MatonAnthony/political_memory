@@ -8,7 +8,6 @@ three websites ("gears") are free.
 To deploy the website, use a command like::
 
     rhc app-create \
-        postgresql-9.2 \
         python-2.7 \
         "http://cartreflect-claytondev.rhcloud.com/reflect?github=smarterclayton/openshift-redis-cart" \
         cron-1.4 \
@@ -16,7 +15,10 @@ To deploy the website, use a command like::
         -a yourappname \
         -e DJANGO_SECRET_KEY=$(openssl rand -base64 32) \
         -e OPENSHIFT_PYTHON_WSGI_APPLICATION=memopol/wsgi.py \
-        --from-code https://github.com/political-memory/political_memory.git
+        --from-code https://github.com/political-memory/political_memory.git \
+        --deployment-branch yourbranch
 
-Then, either wait for the daily cron to fill up the database, either ssh into
-the container and run the import commands manually.
+.. danger:: Do not have any postgresql cartridge in your gear if you're on a
+            free plan, since you won't have enough disk space to download the
+            data and run the import scripts ! If you don't have a free plan,
+            the only solution for now is to upload an sqlite database.
