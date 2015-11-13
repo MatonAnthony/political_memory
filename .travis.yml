@@ -19,6 +19,7 @@ after_success:
 - "./manage.py collectstatic --noinput"
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
+- git checkout openshift
 - git add --all
 - git commit -am "Travis change"
 deploy:
