@@ -2,8 +2,6 @@ sudo: false
 env:
   matrix:
   - DEBUG=True
-  global:
-    secure: e1hG40qklhja8zBQs7io32pP9Ayj5IO8LFjtXeUO1PIaQlcVwmMh+6O9hghuKzuevihlGcD0RJiBmda4e+8o7bZt0rvYddVgvpfWj06AJjK9hEWDCbZkVen7hHHuP58GQEEPqF9xo4Vt7ZgVZSME2Fahjit7+IzrhSq26Nukpbg=
 language: python
 python:
 - '2.7'
@@ -15,22 +13,10 @@ before_script:
 - bower install
 - npm install
 script:
-- ./manage.py migrate
+- "./manage.py migrate"
 - node_modules/gulp/bin/gulp.js less
 before_deploy:
 - "./manage.py collectstatic --noinput"
-- git checkout $TRAVIS_BRANCH
-- git config --global user.email 'bot@travis-ci.com'
-- git config --global user.name 'Bot - Travis CI'
-- git add -f wsgi
-- git commit -am 'Travis Build'
-- git checkout -b travis_build_$TRAVIS_BUILD_NUMBER
-- git add -f log
-- git add -f db.sqlite
-- git commit -m 'With data'
-- git remote add github https://memopol-ci:$GITHUB_TOKEN@github.com/political-memory/political_memory.git
-- git push github travis_build_$TRAVIS_BUILD_NUMBER
-- git checkout $TRAVIS_BRANCH
 deploy:
   provider: openshift
   user: jamespic@gmail.com
