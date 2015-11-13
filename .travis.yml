@@ -16,18 +16,19 @@ script:
 - "./manage.py migrate"
 - node_modules/gulp/bin/gulp.js less
 after_success:
-- "./manage.py collectstatic --noinput"
+- ./manage.py collectstatic --noinput
+- tar cvfj wsgi.tbz2 wsgi
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
-- git checkout openshift
+- git checkout $TRAVIS_BRANCH
 - git add --all
 - git commit -am "Travis change"
-- git tag ${TRAVIS_BRANCH}_build
+- git tag -f ${TRAVIS_BRANCH}_build
 deploy:
 - provider: releases
   api_key:
-    secure: g9RSaruNWpSdh8UYX4H9Q92m/tjU3Ly7TqU3e86cbEpPvNdrsT69DqauRhhaEjvrtj2opFrIwiQrOXDr0P4OTQg7ba3TchthFqNBccq7Ns0lBHKcIzjtu/sshRi/AQIKCSxYbw1+tKm6gQTO4NYaQ320g1QUkbalQlakxPm8ng8=
-  file: wsgi
+    secure: cK8VLq7h9mqU0sIdIAaVK3gbEU/jL44nNeFiPAinYTY0WaFAPPUaWSb/g/HsXY1HmT3l551uA0KTTWdLZlXdEjkCKk8tK2+XSYf2F9Al9iMHFH0CoIE8QdXCBmK5KdOBwmx71EDr7238ToMKzkIXmS7S/TVbGSYxJ6qCr/XEHZ8=
+  file: wsgi.tar
   on:
     repo: political-memory/political_memory
     all_branches: true
