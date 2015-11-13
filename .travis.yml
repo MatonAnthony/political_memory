@@ -15,8 +15,12 @@ before_script:
 script:
 - "./manage.py migrate"
 - node_modules/gulp/bin/gulp.js less
-before_deploy:
+after_success:
 - "./manage.py collectstatic --noinput"
+- git config --global user.email "travis@localhost.localdomain"
+- git config --global user.name "Travis CI"
+- git add --all
+- git commit -am "Travis change"
 deploy:
   provider: openshift
   user: jamespic@gmail.com
