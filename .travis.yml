@@ -1,3 +1,6 @@
+branches:
+  except:
+    - /^*-v[0-9]/
 sudo: false
 env:
   matrix:
@@ -15,15 +18,17 @@ before_script:
 script:
 - "./manage.py migrate"
 - node_modules/gulp/bin/gulp.js less
-after_success:
+before_deploy:
 - ./manage.py collectstatic --noinput
 - tar cvfj wsgi.tbz2 wsgi
+- git fetch --tags
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
 - git checkout $TRAVIS_BRANCH
 - git add --all
 - git commit -am "Travis change"
-- git tag -f ${TRAVIS_BRANCH}_build
+- export GIT_TAG=$TRAVIS_BRANCH-v0.1.$TRAVIS_BUILD_NUMBER
+- git tag -f $GIT_TAG
 deploy:
 - provider: releases
   api_key:
