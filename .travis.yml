@@ -3,7 +3,7 @@ env:
   matrix:
   - DEBUG=True
   global:
-    secure: CeLkK3gfLZH8rtkEBb1Ik9ERBaOJFjCc8NruI7+XaH+N8OtIwpW85xQuyyUIyTcpePVWPOhgFHgJ25kfTl3/H7gslvpS/33TGYJVtHIXAj5/DRcCcdo7Su5l+J5tpgNtRkHJOnCvBlSemCCO4e/t9k0HmxPhTcHE3pZjGhSYaU0=
+    secure: e1hG40qklhja8zBQs7io32pP9Ayj5IO8LFjtXeUO1PIaQlcVwmMh+6O9hghuKzuevihlGcD0RJiBmda4e+8o7bZt0rvYddVgvpfWj06AJjK9hEWDCbZkVen7hHHuP58GQEEPqF9xo4Vt7ZgVZSME2Fahjit7+IzrhSq26Nukpbg=
 language: python
 python:
 - '2.7'
@@ -28,8 +28,9 @@ before_deploy:
 - git add -f log
 - git add -f db.sqlite
 - git commit -m 'With data'
-- git remote add github https://$GITHUB_TOKEN@github.com/political-memory/political_memory.git
+- git remote add github https://memopol-ci:$GITHUB_TOKEN@github.com/political-memory/political_memory.git
 - git push github travis_build_$TRAVIS_BUILD_NUMBER
+- git checkout $TRAVIS_BRANCH
 deploy:
   provider: openshift
   user: jamespic@gmail.com
