@@ -8,5 +8,5 @@ rm -rf ep_meps_current.json.xz
 wget http://parltrack.euwiki.org/dumps/ep_meps_current.json.xz
 
 cd ${OPENSHIFT_REPO_DIR}
-DJANGO_SETTINGS_MODULE=memopol.settings
+export DJANGO_SETTINGS_MODULE=memopol.settings
 unxz -c ${OPENSHIFT_DATA_DIR}ep_meps_current.json.xz | parltrack_import_representatives
