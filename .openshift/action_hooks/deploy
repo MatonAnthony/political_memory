@@ -20,7 +20,8 @@ python ${OPENSHIFT_REPO_DIR}manage.py migrate --noinput
 
 pushd ${OPENSHIFT_REPO_DIR}
 if ! git log ${OPENSHIFT_REPO_DIR}wsgi/static/stylesheets/libs.min.css; then
-    npm install -g bower
+    npm install bower
+    find . -name bower
     bower install
     npm install
 fi
