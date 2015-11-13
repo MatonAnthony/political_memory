@@ -18,6 +18,16 @@ pip install -r ${OPENSHIFT_REPO_DIR}requirements.txt
 
 python ${OPENSHIFT_REPO_DIR}manage.py migrate --noinput
 
+pushd ${OPENSHIFT_REPO_DIR}
+if ! git log ${OPENSHIFT_REPO_DIR}wsgi/static/stylesheets/libs.min.css; then
+    npm install -g bower
+    bower install
+    npm install
+fi
+node_modules/gulp/bin/gulp.js less
+./manage.py collectstatic --noinput
+popd
+
 mkdir -p ${OPENSHIFT_DATA_DIR}media
 mkdir -p ${OPENSHIFT_REPO_DIR}wsgi/static/media
 ln -sf ${OPENSHIFT_DATA_DIR}media ${OPENSHIFT_REPO_DIR}wsgi/static/media

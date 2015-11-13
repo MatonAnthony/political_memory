@@ -20,23 +20,7 @@ script:
 - node_modules/gulp/bin/gulp.js less
 before_deploy:
 - ./manage.py collectstatic --noinput
-- tar cvfj wsgi.tbz2 wsgi
-- git fetch --tags
-- git config --global user.email "travis@localhost.localdomain"
-- git config --global user.name "Travis CI"
-- git checkout $TRAVIS_BRANCH
-- git add --all
-- git commit -am "Travis change"
-- export GIT_TAG=$TRAVIS_BRANCH-v0.1.$TRAVIS_BUILD_NUMBER
-- git tag -f $GIT_TAG
 deploy:
-- provider: releases
-  api_key:
-    secure: cK8VLq7h9mqU0sIdIAaVK3gbEU/jL44nNeFiPAinYTY0WaFAPPUaWSb/g/HsXY1HmT3l551uA0KTTWdLZlXdEjkCKk8tK2+XSYf2F9Al9iMHFH0CoIE8QdXCBmK5KdOBwmx71EDr7238ToMKzkIXmS7S/TVbGSYxJ6qCr/XEHZ8=
-  file: wsgi.tar
-  on:
-    repo: political-memory/political_memory
-    all_branches: true
 - provider: openshift
   user: jamespic@gmail.com
   password:
