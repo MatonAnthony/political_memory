@@ -36,8 +36,7 @@ deploy:
     branch: openshift
 - provider: releases
   api_key:
-    secure: g9RSaruNWpSdh8UYX4H9Q92m/tjU3Ly7TqU3e86cbEpPvNdrsT69DqauRhhaEjvrtj2opFrIwiQrOXDr0P4OTQg7b
-a3TchthFqNBccq7Ns0lBHKcIzjtu/sshRi/AQIKCSxYbw1+tKm6gQTO4NYaQ320g1QUkbalQlakxPm8ng8=
+    secure: g9RSaruNWpSdh8UYX4H9Q92m/tjU3Ly7TqU3e86cbEpPvNdrsT69DqauRhhaEjvrtj2opFrIwiQrOXDr0P4OTQg7ba3TchthFqNBccq7Ns0lBHKcIzjtu/sshRi/AQIKCSxYbw1+tKm6gQTO4NYaQ320g1QUkbalQlakxPm8ng8=
   file: wsgi
   on:
     tags: true
