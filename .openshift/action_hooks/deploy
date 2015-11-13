@@ -18,14 +18,23 @@ pip install -r ${OPENSHIFT_REPO_DIR}requirements.txt
 
 python ${OPENSHIFT_REPO_DIR}manage.py migrate --noinput
 
-pushd ${OPENSHIFT_REPO_DIR}
-if ! git log ${OPENSHIFT_REPO_DIR}wsgi/static/stylesheets/libs.min.css; then
-    npm install bower
-    find . -name bower
-    bower install
-    npm install
+pushd ${OPENSHIFT_DATA_DIR}
+if ! [ -d node ]; then
+    wget https://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz
+    tar xvzf node-v4.2.2-linux-x64.tar.gz
+    ln -sfn node-v4.2.2-linux-x64 node
 fi
+popd
+
+pushd ${OPENSHIFT_REPO_DIR}
+PATH="${OPENSHIFT_DATA_DIR}node/bin:$PATH"
+HOME=$OPENSHIFT_DATA_DIR
+CI=true
+npm install bower
+npm install
+node_modules/.bin/bower install
 node_modules/gulp/bin/gulp.js less
+mkdir -p wsgi
 ./manage.py collectstatic --noinput
 popd
 
