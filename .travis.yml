@@ -22,6 +22,7 @@ after_success:
 - git checkout openshift
 - git add --all
 - git commit -am "Travis change"
+- git tag ${TRAVIS_BRANCH}_build
 deploy:
 - provider: releases
   api_key:
