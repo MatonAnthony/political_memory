@@ -1,16 +1,10 @@
 *.sqlite3
 celerybeat-*
-core/static/libs/*
 
 # libs
-static/libs
 node_modules
 
-# compiled css
-static/stylesheets/*.min.css
-
-
-# settings 
+# settings
 memopol/config.json
 
 # Byte-compiled / optimized / DLL files

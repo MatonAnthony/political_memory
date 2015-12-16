@@ -1,0 +1,6 @@
+Beware that some of the files here are generated with gulp !
+
+Commits in generated files will be overwritten next time they are generated
+with gulp.
+
+See development docs for details.
